@@ -13,7 +13,7 @@ import com.filipeneri.bipamobilecodingchallenge.ui.theme.YellowLight
 fun Loading(){
     CircularProgressIndicator(
         modifier = Modifier.width(64.dp),
-        color = Yellow,
-        trackColor = YellowLight,
+        color = MaterialTheme.colorScheme.primary,
+        trackColor = MaterialTheme.colorScheme.onPrimary,
     )
 }
