@@ -9,6 +9,6 @@ import org.koin.dsl.single
 class AppModule {
     val appModule = module{
         viewModelOf(::MainViewModel)
-        factory { MainRepository() }
+        single { MainRepository() }
     }
 }

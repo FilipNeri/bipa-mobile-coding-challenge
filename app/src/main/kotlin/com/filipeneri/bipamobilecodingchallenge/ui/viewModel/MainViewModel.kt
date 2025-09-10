@@ -1,5 +1,6 @@
 package com.filipeneri.bipamobilecodingchallenge.ui.viewModel
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.filipeneri.bipamobilecodingchallenge.model.City
@@ -28,7 +29,7 @@ class MainViewModel(private var repository: MainRepository) : ViewModel() {
                 _uiState.value = _uiState.value.copy(isLoading = true, msgError = "")
                 delay(1000)
                 _uiState.value = _uiState.value.copy(
-                    nodes = _uiState.value.nodes + repository.getNodes()
+                    nodes =  repository.getNodes()
                         .filterIndexed { index, _ -> index <= 99 }
                         .sortedByDescending { it.channels },
                     isLoading = false,
@@ -52,18 +53,20 @@ class MainViewModel(private var repository: MainRepository) : ViewModel() {
     fun formatCityCountry(city: City?, country: Country?): String {
         var location = ""
         if (city != null) {
-            location += if (!city.ptBR.isNullOrEmpty()) "${city.ptBR}, " else city.en.orEmpty() + ", "
+            location += if (city.ptBR.isNotEmpty()) "${city.ptBR}, " else city.en + ", "
         }
         if (country != null) {
-            location += if (!country.ptBR.isNullOrEmpty()) country.ptBR else country.en.orEmpty()
+            location += country.ptBR.ifEmpty { country.en }
         }
         return location.trimEnd(',', ' ')
     }
 
+    @SuppressLint("DefaultLocale")
     fun convertSatsToBitcoin(sats: Long): String {
         return String.format("%.8f", (sats.toFloat() / 100_000_000))
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun convertLongToTime(time: Long): String {
         val date = Date(time)
         val format = SimpleDateFormat("yyyy.MM.dd HH:mm")
